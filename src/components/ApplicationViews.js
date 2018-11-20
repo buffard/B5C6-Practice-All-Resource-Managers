@@ -4,6 +4,7 @@ import AnimalList from './AnimalList/AnimalList'
 import LocationList from './LocationList/LocationList'
 import EmployeeList from './employee/EmployeeList'
 import OwnersList from './owners/OwnersList'
+import AnimalManager from "../modules/AnimalManager"
 
 class ApplicationViews extends Component {
 
@@ -17,9 +18,18 @@ class ApplicationViews extends Component {
   componentDidMount() {
     const newState = {}
 
-    fetch("http://localhost:5002/animals")
-      .then(r => r.json())
-      .then(animals => newState.animals = animals)
+  
+
+    // Our fetch happens in AnimalManager 
+    AnimalManager.getAll().then(allAnimals => {
+      this.setState({
+        animals: allAnimals
+      })
+    })
+    
+
+
+
 
       .then(() => fetch("http://localhost:5002/employees")
         .then(r => r.json()))
@@ -54,17 +64,17 @@ class ApplicationViews extends Component {
       .then(() => fetch(`http://localhost:5002/employees`))
       .then(e => e.json())
       .then(employees => this.setState({ employees: employees }))
-    }
+  }
 
-    deleteOwner = id => {
-      return fetch(`http://localhost:5002/owners/${id}`, {
-        method: "DELETE"
-      })
-      .then(e=> e.json())
+  deleteOwner = id => {
+    return fetch(`http://localhost:5002/owners/${id}`, {
+      method: "DELETE"
+    })
+      .then(e => e.json())
       .then(() => fetch(`http://localhost:5002/owners`))
       .then(e => e.json())
-      .then(owners => this.setState({owners: owners}))
-    }
+      .then(owners => this.setState({ owners: owners }))
+  }
 
   render() {
     return (
