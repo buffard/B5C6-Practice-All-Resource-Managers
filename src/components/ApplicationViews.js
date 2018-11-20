@@ -4,8 +4,10 @@ import AnimalList from './AnimalList/AnimalList'
 import LocationList from './LocationList/LocationList'
 import EmployeeList from './employee/EmployeeList'
 import OwnersList from './owners/OwnersList'
-import AnimalManager from "../modules/AnimalManager"
-
+import AnimalsManager from "../modules/AnimalsManager"
+import LocationsManager from "../modules/LocationsManager"
+import EmployeesManager from "../modules/EmployeesManager"
+import OwnersManager from "../modules/OwnersManager"
 class ApplicationViews extends Component {
 
   state = {
@@ -18,31 +20,29 @@ class ApplicationViews extends Component {
   componentDidMount() {
     const newState = {}
 
-  
-
-    // Our fetch happens in AnimalManager 
-    AnimalManager.getAll().then(allAnimals => {
+    AnimalsManager.getAll().then(allAnimals => {
       this.setState({
         animals: allAnimals
       })
     })
-    
 
+    LocationsManager.getAll().then(allLocations => {
+      this.setState({
+        locations: allLocations
+      })
+    })
 
+    EmployeesManager.getAll().then(allEmployees => {
+      this.setState({
+        employees: allEmployees
+      })
+    })
 
-
-      .then(() => fetch("http://localhost:5002/employees")
-        .then(r => r.json()))
-      .then(employees => newState.employees = employees)
-
-      .then(() => fetch("http://localhost:5002/locations")
-        .then(r => r.json()))
-      .then(locations => newState.locations = locations)
-
-      .then(() => fetch("  http://localhost:5002/owners")
-        .then(r => r.json()))
-      .then(owners => newState.owners = owners)
-
+    OwnersManager.getAll().then(allOwners => {
+      this.setState({
+        owners: allOwners
+      })
+    })
       .then(() => this.setState(newState))
   }
 
