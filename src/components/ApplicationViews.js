@@ -4,7 +4,10 @@ import AnimalList from './AnimalList/AnimalList'
 import LocationList from './LocationList/LocationList'
 import EmployeeList from './employee/EmployeeList'
 import OwnersList from './owners/OwnersList'
-
+import AnimalsManager from "../modules/AnimalsManager"
+import LocationsManager from "../modules/LocationsManager"
+import EmployeesManager from "../modules/EmployeesManager"
+import OwnersManager from "../modules/OwnersManager"
 class ApplicationViews extends Component {
 
   state = {
@@ -17,22 +20,29 @@ class ApplicationViews extends Component {
   componentDidMount() {
     const newState = {}
 
-    fetch("http://localhost:5002/animals")
-      .then(r => r.json())
-      .then(animals => newState.animals = animals)
+    AnimalsManager.getAll().then(allAnimals => {
+      this.setState({
+        animals: allAnimals
+      })
+    })
 
-      .then(() => fetch("http://localhost:5002/employees")
-        .then(r => r.json()))
-      .then(employees => newState.employees = employees)
+    LocationsManager.getAll().then(allLocations => {
+      this.setState({
+        locations: allLocations
+      })
+    })
 
-      .then(() => fetch("http://localhost:5002/locations")
-        .then(r => r.json()))
-      .then(locations => newState.locations = locations)
+    EmployeesManager.getAll().then(allEmployees => {
+      this.setState({
+        employees: allEmployees
+      })
+    })
 
-      .then(() => fetch("  http://localhost:5002/owners")
-        .then(r => r.json()))
-      .then(owners => newState.owners = owners)
-
+    OwnersManager.getAll().then(allOwners => {
+      this.setState({
+        owners: allOwners
+      })
+    })
       .then(() => this.setState(newState))
   }
 
@@ -54,17 +64,17 @@ class ApplicationViews extends Component {
       .then(() => fetch(`http://localhost:5002/employees`))
       .then(e => e.json())
       .then(employees => this.setState({ employees: employees }))
-    }
+  }
 
-    deleteOwner = id => {
-      return fetch(`http://localhost:5002/owners/${id}`, {
-        method: "DELETE"
-      })
-      .then(e=> e.json())
+  deleteOwner = id => {
+    return fetch(`http://localhost:5002/owners/${id}`, {
+      method: "DELETE"
+    })
+      .then(e => e.json())
       .then(() => fetch(`http://localhost:5002/owners`))
       .then(e => e.json())
-      .then(owners => this.setState({owners: owners}))
-    }
+      .then(owners => this.setState({ owners: owners }))
+  }
 
   render() {
     return (
